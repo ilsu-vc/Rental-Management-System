@@ -1,8 +1,16 @@
 import axios from 'axios';
 
 const getBaseURL = () => {
-  const envUrl = import.meta.env.VITE_API_URL as string;
-  if (envUrl) return envUrl;
+  let envUrl = (import.meta.env.VITE_API_URL as string || '').trim();
+  if (envUrl) {
+    if (!envUrl.endsWith('/api') && !envUrl.endsWith('/api/')) {
+      if (envUrl.endsWith('/')) {
+        envUrl = envUrl.slice(0, -1);
+      }
+      envUrl = `${envUrl}/api`;
+    }
+    return envUrl;
+  }
 
   // Fallback for production deployment if VITE_API_URL is missing
   if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {

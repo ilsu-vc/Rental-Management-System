@@ -37,14 +37,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/buildings', buildingRoutes);
-app.use('/api/rooms', roomRoutes);
-app.use('/api/tenants', tenantRoutes);
-app.use('/api/bills', billRoutes);
-app.use('/api/announcements', announcementRoutes);
-app.use('/api/reports', reportRoutes);
+// API Routes (supports both /api prefix and root paths for robustness)
+const mountRoutes = (prefix: string) => {
+  app.use(`${prefix}/auth`, authRoutes);
+  app.use(`${prefix}/buildings`, buildingRoutes);
+  app.use(`${prefix}/rooms`, roomRoutes);
+  app.use(`${prefix}/tenants`, tenantRoutes);
+  app.use(`${prefix}/bills`, billRoutes);
+  app.use(`${prefix}/announcements`, announcementRoutes);
+  app.use(`${prefix}/reports`, reportRoutes);
+};
+
+mountRoutes('/api');
+mountRoutes('');
 
 // Health check
 const healthHandler = (req: express.Request, res: express.Response) => {
