@@ -25,7 +25,14 @@ if (clientUrl.endsWith('/')) {
 }
 
 app.use(cors({
-  origin: [clientUrl, 'http://localhost:5173', 'http://localhost:3000'],
+  origin: [
+    clientUrl, 
+    'http://localhost:5173', 
+    'http://localhost:3000',
+    'https://rental-management-saas.vercel.app',
+    'https://rental-management-system.vercel.app',
+    'https://rentahub.vercel.app'
+  ],
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
