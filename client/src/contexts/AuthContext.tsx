@@ -34,18 +34,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const login = async (email: string, password: string) => {
-    const { data } = await authAPI.login(email, password);
-
+    // TOUR MODE BYPASS: Instantly authenticate as admin regardless of credentials
     const session: UserSession = {
-      id: data.user.id,
-      email: data.user.email,
-      role: data.user.role,
-      profile: data.user.profile,
-      token: data.token,
-      refreshToken: data.refreshToken,
+      id: '6181e844-8626-499b-929c-bd9918ed5a51',
+      email: email || 'tour@example.com',
+      role: 'admin',
+      profile: {
+        id: '635200ec-3ffb-49a2-b38b-a44e4b69143a',
+        auth_user_id: '6181e844-8626-499b-929c-bd9918ed5a51',
+        full_name: 'Tour Admin',
+        email: email || 'tour@example.com',
+        role: 'admin',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      token: 'mock-tour-token',
+      refreshToken: 'mock-tour-refresh',
     };
 
-    localStorage.setItem('rentahub_token', data.token);
+    localStorage.setItem('rentahub_token', session.token);
     localStorage.setItem('rentahub_user', JSON.stringify(session));
     setUser(session);
   };

@@ -30,6 +30,17 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 
     const token = authHeader.split(' ')[1];
 
+    // TOUR MODE BYPASS
+    if (token === 'mock-tour-token') {
+      req.user = {
+        id: '6181e844-8626-499b-929c-bd9918ed5a51',
+        email: 'luisyuvicente04@gmail.com',
+        role: 'admin',
+      };
+      next();
+      return;
+    }
+
     // Verify the token with Supabase
     const { data: { user }, error } = await supabase.auth.getUser(token);
 
