@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://rental-management-system-api.onrender.com/api/:path*"
+      "destination": "https://rentalhub-api-dajt.onrender.com/api/:path*"
     },
     {
       "source": "/((?!api|assets|favicon.ico).*)",

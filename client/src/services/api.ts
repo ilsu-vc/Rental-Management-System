@@ -6,7 +6,7 @@ const getBaseURL = () => {
 
   // Fallback for production deployment if VITE_API_URL is missing
   if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-    return 'https://rental-management-system-api.onrender.com/api';
+    return 'https://rentalhub-api-dajt.onrender.com/api';
   }
 
   return '/api';
