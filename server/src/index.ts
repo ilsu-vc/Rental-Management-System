@@ -19,12 +19,23 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
+let clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+if (clientUrl.endsWith('/')) {
+  clientUrl = clientUrl.slice(0, -1);
+}
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: [clientUrl, 'http://localhost:5173', 'http://localhost:3000'],
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Request logging for debugging deployment issues
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  next();
+});
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -36,13 +47,16 @@ app.use('/api/announcements', announcementRoutes);
 app.use('/api/reports', reportRoutes);
 
 // Health check
-app.get('/api/health', (req, res) => {
+const healthHandler = (req: express.Request, res: express.Response) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
     version: '1.0.0',
+    cors_origin: clientUrl,
   });
-});
+};
+app.get('/api/health', healthHandler);
+app.get('/health', healthHandler);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

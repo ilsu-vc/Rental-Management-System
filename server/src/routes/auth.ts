@@ -71,9 +71,9 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
         profile,
       },
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error('Login error:', err);
-    res.status(500).json({ error: 'Login failed' });
+    res.status(500).json({ error: err.message || 'Login failed' });
   }
 });
 
@@ -121,9 +121,9 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
     }
 
     res.status(201).json({ admin });
-  } catch (err) {
+  } catch (err: any) {
     console.error('Public registration error:', err);
-    res.status(500).json({ error: 'Registration failed' });
+    res.status(500).json({ error: err.message || 'Registration failed' });
   }
 });
 
@@ -202,9 +202,9 @@ router.post('/register-tenant', authenticate, async (req: Request, res: Response
     }
 
     res.status(201).json({ tenant });
-  } catch (err) {
+  } catch (err: any) {
     console.error('Register tenant error:', err);
-    res.status(500).json({ error: 'Registration failed' });
+    res.status(500).json({ error: err.message || 'Registration failed' });
   }
 });
 
@@ -250,9 +250,9 @@ router.post('/register-admin', authenticate, async (req: Request, res: Response)
     }
 
     res.status(201).json({ admin });
-  } catch (err) {
+  } catch (err: any) {
     console.error('Register admin error:', err);
-    res.status(500).json({ error: 'Registration failed' });
+    res.status(500).json({ error: err.message || 'Registration failed' });
   }
 });
 
@@ -288,9 +288,9 @@ router.get('/me', authenticate, async (req: Request, res: Response): Promise<voi
 
       res.json({ user: { ...req.user, profile } });
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error('Get profile error:', err);
-    res.status(500).json({ error: 'Failed to get profile' });
+    res.status(500).json({ error: err.message || 'Failed to get profile' });
   }
 });
 

@@ -193,7 +193,7 @@ CREATE POLICY "Admins full access to announcements" ON announcements FOR ALL
   USING (EXISTS (SELECT 1 FROM admin_profiles WHERE auth_user_id = auth.uid()));
 
 CREATE POLICY "Admins full access to admin_profiles" ON admin_profiles FOR ALL
-  USING (EXISTS (SELECT 1 FROM admin_profiles WHERE auth_user_id = auth.uid()));
+  USING (auth_user_id = auth.uid());
 
 -- Tenants can read their own data
 CREATE POLICY "Tenants can view their own tenant record" ON tenants FOR SELECT
