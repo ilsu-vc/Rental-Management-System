@@ -1,7 +1,19 @@
 import axios from 'axios';
 
+const getBaseURL = () => {
+  const envUrl = import.meta.env.VITE_API_URL as string;
+  if (envUrl) return envUrl;
+
+  // Fallback for production deployment if VITE_API_URL is missing
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    return 'https://rental-management-system-api.onrender.com/api';
+  }
+
+  return '/api';
+};
+
 const api = axios.create({
-  baseURL: (import.meta.env.VITE_API_URL as string) || '/api',
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
   },
