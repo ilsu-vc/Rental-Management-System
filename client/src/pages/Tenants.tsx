@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, UserPlus, UserMinus, Star, Mail, Phone, Edit2, Trash2 } from 'lucide-react';
-import { tenantsAPI, roomsAPI, buildingsAPI } from '../services/api';
+import { tenantsAPI, roomsAPI, buildingsAPI, authAPI } from '../services/api';
 import { Tenant, Building, Room } from '../types';
 
 const Tenants: React.FC = () => {
@@ -11,7 +11,7 @@ const Tenants: React.FC = () => {
   const [filterBuilding, setFilterBuilding] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState<Tenant | null>(null);
-  const [form, setForm] = useState({ accountId: '', firstName: '', lastName: '', email: '', phone: '', isPrimary: false });
+  const [form, setForm] = useState({ accountId: '', firstName: '', lastName: '', email: '', password: '', phone: '', isPrimary: false });
 
   useEffect(() => { loadData(); }, []);
 
@@ -37,7 +37,7 @@ const Tenants: React.FC = () => {
           email: form.email, phone: form.phone, isPrimary: form.isPrimary,
         });
       } else {
-        await tenantsAPI.create(form);
+        await authAPI.registerTenant(form);
       }
       setShowModal(false); setEditing(null); loadData();
     } catch (err: any) {
@@ -52,13 +52,13 @@ const Tenants: React.FC = () => {
 
   const openEdit = (t: Tenant) => {
     setEditing(t);
-    setForm({ accountId: t.account_id, firstName: t.first_name, lastName: t.last_name, email: t.email, phone: t.phone || '', isPrimary: t.is_primary });
+    setForm({ accountId: t.account_id, firstName: t.first_name, lastName: t.last_name, email: t.email, password: '', phone: t.phone || '', isPrimary: t.is_primary });
     setShowModal(true);
   };
 
   const openAdd = () => {
     setEditing(null);
-    setForm({ accountId: '', firstName: '', lastName: '', email: '', phone: '', isPrimary: false });
+    setForm({ accountId: '', firstName: '', lastName: '', email: '', password: '', phone: '', isPrimary: false });
     setShowModal(true);
   };
 
@@ -134,6 +134,18 @@ const Tenants: React.FC = () => {
                   <div className="form-group"><label className="form-label">Last Name *</label><input value={form.lastName} onChange={e => setForm({...form, lastName: e.target.value})} required /></div>
                 </div>
                 <div className="form-group"><label className="form-label">Email *</label><input type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required /></div>
+                {!editing && (
+                  <div className="form-group">
+                    <label className="form-label">Password *</label>
+                    <input 
+                      type="password" 
+                      value={form.password} 
+                      onChange={e => setForm({...form, password: e.target.value})} 
+                      placeholder="••••••••" 
+                      required 
+                    />
+                  </div>
+                )}
                 <div className="form-group"><label className="form-label">Phone</label><input value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} /></div>
                 <div className="form-group">
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
